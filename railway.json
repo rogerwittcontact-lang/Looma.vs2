@@ -5,8 +5,7 @@
     "dockerfilePath": "backend/Dockerfile"
   },
   "deploy": {
-    "startCommand": "node -e \"const s=require('net').createConnection(5432,'ep-misty-hat-acatwa0o.sa-east-1.aws.neon.tech'); const t=setTimeout(()=>{console.log('TIMEOUT apos 10s - nunca conectou'); process.exit(0)},10000); s.on('connect',()=>{console.log('CONECTOU!'); clearTimeout(t); process.exit(0)}); s.on('error',e=>{console.log('ERRO TCP:', e.message); clearTimeout(t); process.exit(0)})\"",
+    "startCommand": "npx prisma migrate deploy && npm run start:prod",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 3
   }
-}
