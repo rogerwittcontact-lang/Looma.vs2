@@ -2,54 +2,74 @@ import { Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { RelationshipRepository } from '../../domain/repositories/relationship.repository';
-import { Dossier } from '@prisma/client';
 
 @Injectable()
-export class PrismaRelationshipRepository implements RelationshipRepository {
+export class PrismaRelationshipRepository
+  implements RelationshipRepository
+{
   constructor(private readonly prisma: PrismaService) {}
 
   async findOrCreateBetween(accountAId: string, accountBId: string) {
-    // Normaliza a ordem para que (A,B) e (B,A) sempre resolvam
-    // para a mesma linha, respeitando a constraint única do schema.
     const [first, second] = [accountAId, accountBId].sort();
 
     const existing = await this.prisma.relationship.findUnique({
-      where: { accountAId_accountBId: { accountAId: first, accountBId: second } },
+      where: {
+        accountAId_accountBId: {
+          accountAId: first,
+          accountBId: second,
+        },
+      },
     });
+
     if (existing) return existing;
 
     return this.prisma.relationship.create({
-      data: { accountAId: first, accountBId: second },
+      data: {
+        accountAId: first,
+        accountBId: second,
+      },
     });
   }
 
   findById(id: string) {
-    return this.prisma.relationship.findUnique({ where: { id } });
+    return this.prisma.relationship.findUnique({
+      where: { id },
+    });
   }
 
   findDossier(relationshipId: string) {
-    return this.prisma.dossier.findUnique({ where: { relationshipId } });
+    return this.prisma.dossier.findUnique({
+      where: { relationshipId },
+    });
   }
-upsertDossier(
-  relationshipId: string,
-  data: Prisma.DossierUpdateInput,
-) {
-  return this.prisma.dossier.upsert({
-    where: {
-      relationshipId,
-    },
-    create: {
-      relationshipId,
-      ...(data as Prisma.DossierCreateInput),
-    },
-    update: data,
-  });
-}
+
+  upsertDossier(
+    relationshipId: string,
+    data: Prisma.DossierCreateInput,
+  ) {
+    return this.prisma.dossier.upsert({
+      where: {
+        relationshipId,
+      },
+      create: data,
+      update: {
+        preferredPaymentMethod: data.preferredPaymentMethod,
+        defaultApprovers: data.defaultApprovers,
+        brandAssets: data.brandAssets,
+        defaultContractFileId: data.defaultContractFileId,
+        address: data.address,
+        taxDocument: data.taxDocument,
+      },
+    });
+  }
 
   listForAccount(accountId: string) {
     return this.prisma.relationship.findMany({
       where: {
-        OR: [{ accountAId: accountId }, { accountBId: accountId }],
+        OR: [
+          { accountAId: accountId },
+          { accountBId: accountId },
+        ],
       },
     });
   }
