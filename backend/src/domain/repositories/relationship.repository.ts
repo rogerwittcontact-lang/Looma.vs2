@@ -1,14 +1,8 @@
-import { Relationship, Dossier, Prisma } from '@prisma/client';
+import { Prisma, Relationship, Dossier } from '@prisma/client';
 
 export const RELATIONSHIP_REPOSITORY = Symbol('RELATIONSHIP_REPOSITORY');
 
 export interface RelationshipRepository {
-  /**
-   * ADR-000 (implícita no domínio): Relacionamento nasce automaticamente
-   * na primeira interação entre duas Contas. Este método é idempotente —
-   * se já existir um Relacionamento entre as duas Contas (em qualquer
-   * ordem), retorna o existente em vez de criar um novo.
-   */
   findOrCreateBetween(
     accountAId: string,
     accountBId: string,
@@ -20,7 +14,7 @@ export interface RelationshipRepository {
 
   upsertDossier(
     relationshipId: string,
-    data: Prisma.DossierUpdateInput,
+    data: Prisma.DossierCreateInput,
   ): Promise<Dossier>;
 
   listForAccount(accountId: string): Promise<Relationship[]>;
