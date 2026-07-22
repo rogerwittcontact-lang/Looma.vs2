@@ -1,19 +1,11 @@
 import { Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { RelationshipRepository } from '../../domain/repositories/relationship.repository';
-type UpsertDossierData = {
-  preferredPaymentMethod?: string | null;
-  defaultApprovers?:
-    | Prisma.InputJsonValue
-    | Prisma.NullableJsonNullValueInput;
-  brandAssets?:
-    | Prisma.InputJsonValue
-    | Prisma.NullableJsonNullValueInput;
-  defaultContractFileId?: string | null;
-  address?: string | null;
-  taxDocument?: string | null;
-};
+import {
+  RelationshipRepository,
+  UpsertDossierData,
+} from '../../domain/repositories/relationship.repository';
+
 
 @Injectable()
 export class PrismaRelationshipRepository
