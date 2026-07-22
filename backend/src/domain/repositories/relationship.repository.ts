@@ -12,10 +12,23 @@ export interface RelationshipRepository {
 
   findDossier(relationshipId: string): Promise<Dossier | null>;
 
-  upsertDossier(
-    relationshipId: string,
-    data: Prisma.DossierCreateInput,
-  ): Promise<Dossier>;
+export type UpsertDossierData = {
+  preferredPaymentMethod?: string | null;
+  defaultApprovers?:
+    | Prisma.InputJsonValue
+    | Prisma.NullableJsonNullValueInput;
+  brandAssets?:
+    | Prisma.InputJsonValue
+    | Prisma.NullableJsonNullValueInput;
+  defaultContractFileId?: string | null;
+  address?: string | null;
+  taxDocument?: string | null;
+};
+
+upsertDossier(
+  relationshipId: string,
+  data: UpsertDossierData,
+): Promise<Dossier>;
 
   listForAccount(accountId: string): Promise<Relationship[]>;
 }
