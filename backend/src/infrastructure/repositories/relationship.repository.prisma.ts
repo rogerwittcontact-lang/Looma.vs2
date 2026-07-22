@@ -30,17 +30,17 @@ export class PrismaRelationshipRepository implements RelationshipRepository {
   findDossier(relationshipId: string) {
     return this.prisma.dossier.findUnique({ where: { relationshipId } });
   }
-
 upsertDossier(
   relationshipId: string,
-  data: Prisma.DossierUncheckedCreateInput &
-        Prisma.DossierUncheckedUpdateInput,
+  data: Prisma.DossierUpdateInput,
 ) {
   return this.prisma.dossier.upsert({
-    where: { relationshipId },
+    where: {
+      relationshipId,
+    },
     create: {
       relationshipId,
-      ...data,
+      ...(data as Prisma.DossierCreateInput),
     },
     update: data,
   });
