@@ -153,16 +153,23 @@ const laghettoAccount = await prisma.account.upsert({
     create: { accountAId: a, accountBId: b },
   });
 
-  await prisma.dossier.upsert({
-    where: { relationshipId: relationship.id },
-    update: {},
-    create: {
-      relationshipId: relationship.id,
-      preferredPaymentMethod: 'PIX',
-      defaultApprovers: [{ personId: rogerAccount.id }],
-      brandAssets: { cores: ['#0D1117', '#2E6BFF'], fontes: ['Sora'] },
-    },
-  });
+await prisma.dossier.upsert({
+  where: { relationshipId: relationship.id },
+  update: {},
+  create: {
+    relationshipId: relationship.id,
+    preferredPaymentMethod: 'PIX',
+    defaultApprovers: JSON.parse(
+      JSON.stringify([{ personId: rogerAccount.id }]),
+    ),
+    brandAssets: JSON.parse(
+      JSON.stringify({
+        cores: ['#0D1117', '#2E6BFF'],
+        fontes: ['Sora'],
+      }),
+    ),
+  },
+});
 
   // ── Projeto de exemplo, já em produção ──
   const project = await prisma.project.upsert({
