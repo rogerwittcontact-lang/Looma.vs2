@@ -1,4 +1,4 @@
-import { Relationship, Dossier } from '@prisma/client';
+import { Relationship, Dossier, Prisma } from '@prisma/client';
 
 export const RELATIONSHIP_REPOSITORY = Symbol('RELATIONSHIP_REPOSITORY');
 
@@ -9,12 +9,19 @@ export interface RelationshipRepository {
    * se já existir um Relacionamento entre as duas Contas (em qualquer
    * ordem), retorna o existente em vez de criar um novo.
    */
-  findOrCreateBetween(accountAId: string, accountBId: string): Promise<Relationship>;
+  findOrCreateBetween(
+    accountAId: string,
+    accountBId: string,
+  ): Promise<Relationship>;
+
   findById(id: string): Promise<Relationship | null>;
+
   findDossier(relationshipId: string): Promise<Dossier | null>;
+
   upsertDossier(
     relationshipId: string,
-    data: Partial<Omit<Dossier, 'relationshipId'>>,
+    data: Prisma.DossierUpdateInput,
   ): Promise<Dossier>;
+
   listForAccount(accountId: string): Promise<Relationship[]>;
 }
