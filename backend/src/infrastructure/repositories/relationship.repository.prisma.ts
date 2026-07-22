@@ -31,13 +31,20 @@ export class PrismaRelationshipRepository implements RelationshipRepository {
     return this.prisma.dossier.findUnique({ where: { relationshipId } });
   }
 
-  upsertDossier(relationshipId: string, data: Partial<Omit<Dossier, 'relationshipId'>>) {
-    return this.prisma.dossier.upsert({
-      where: { relationshipId },
-      create: { relationshipId, ...data },
-      update: data,
-    });
-  }
+upsertDossier(
+  relationshipId: string,
+  data: Prisma.DossierUncheckedCreateInput &
+        Prisma.DossierUncheckedUpdateInput,
+) {
+  return this.prisma.dossier.upsert({
+    where: { relationshipId },
+    create: {
+      relationshipId,
+      ...data,
+    },
+    update: data,
+  });
+}
 
   listForAccount(accountId: string) {
     return this.prisma.relationship.findMany({
