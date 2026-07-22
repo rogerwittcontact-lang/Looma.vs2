@@ -114,40 +114,37 @@ async function main() {
   const passwordHash = await bcrypt.hash('senha123', 10);
 
   const rogerAccount = await prisma.account.upsert({
-    where: { id: 'seed-account-roger' },
-    update: {},
-    create: {
-      id: 'seed-account-roger',
-      type: AccountType.PESSOA,
-      displayName: 'Roger (Fotógrafo)',
-      person: {
-        create: {
-          accountId: 'seed-account-roger',
-          email: 'roger@example.com',
-          passwordHash,
-          languages: ['pt', 'en'],
-        },
+  where: { id: 'seed-account-roger' },
+  update: {},
+  create: {
+    id: 'seed-account-roger',
+    type: AccountType.PESSOA,
+    displayName: 'Roger (Fotógrafo)',
+    person: {
+      create: {
+        email: 'roger@example.com',
+        passwordHash,
+        languages: ['pt', 'en'],
       },
     },
-  });
+  },
+});
 
-  const laghettoAccount = await prisma.account.upsert({
-    where: { id: 'seed-account-laghetto' },
-    update: {},
-    create: {
-      id: 'seed-account-laghetto',
-      type: AccountType.ORGANIZACAO,
-      displayName: 'Laghetto Hotéis',
-      organization: {
-        create: {
-          accountId: 'seed-account-laghetto',
-          legalName: 'Laghetto Hotéis S.A.',
-          document: '00.000.000/0001-00',
-        },
+const laghettoAccount = await prisma.account.upsert({
+  where: { id: 'seed-account-laghetto' },
+  update: {},
+  create: {
+    id: 'seed-account-laghetto',
+    type: AccountType.ORGANIZACAO,
+    displayName: 'Laghetto Hotéis',
+    organization: {
+      create: {
+        legalName: 'Laghetto Hotéis S.A.',
+        document: '00.000.000/0001-00',
       },
     },
-  });
-
+  },
+});
   // ── Relacionamento entre as duas contas ──
   const [a, b] = [rogerAccount.id, laghettoAccount.id].sort();
   const relationship = await prisma.relationship.upsert({
