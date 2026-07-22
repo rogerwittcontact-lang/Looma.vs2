@@ -1,12 +1,1 @@
-{
-  "$schema": "https://railway.app/railway.schema.json",
-  "build": {
-    "builder": "DOCKERFILE",
-    "dockerfilePath": "backend/Dockerfile"
-  },
-  "deploy": {
-    "startCommand": "npx prisma migrate deploy && npm run start:prod",
-    "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 3
-  }
-}
+"startCommand": "node -e \"require('dns').lookup('SEU-HOST-DIRETO.sa-east-1.aws.neon.tech', {all:true}, (e,r)=>{console.log('ERRO:', e); console.log('RESULTADO:', r); process.exit(0)})\""
